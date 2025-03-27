@@ -1769,3 +1769,9 @@ function hashCode (s) {
     }
     return hash;
 };
+
+document.querySelector('.scroll-arrow').addEventListener('click', () => {
+    document.querySelector('.content').scrollIntoView({ 
+        behavior: 'smooth'
+    });
+});
