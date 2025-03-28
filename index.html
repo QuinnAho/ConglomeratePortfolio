@@ -20,13 +20,18 @@
     <meta property="og:image" content="https://paveldogreat.github.io/WebGL-Fluid-Simulation/logo.png">
 
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&family=DM+Serif+Display&family=JetBrains+Mono:wght@500&family=IBM+Plex+Sans:wght@500&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@700&display=swap" rel="stylesheet">
+
     <script type="text/javascript" src="dat.gui.min.js"></script>
 
     <script>
         window.ga = window.ga || function(){ (ga.q = ga.q || []).push(arguments) }; 
         ga.l = +new Date;
         ga('create', 'UA-105392568-1', 'auto');
-        ga('send', 'pageview');
+        ga('send', 'pageview');  
     </script>
     <script async src="https://www.google-analytics.com/analytics.js"></script>
 </head>
@@ -45,15 +50,77 @@
     <section class="hero">
         <canvas></canvas>
         <div class="scroll-arrow">
+          <a href="#intro" id="scroll-arrow">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 17.414l-6.707-6.707 1.414-1.414L12 14.586l5.293-5.293 1.414 1.414z"/>
+              <path d="M12 17.414l-6.707-6.707 1.414-1.414L12 14.586l5.293-5.293 1.414 1.414z"/>
             </svg>
+          </a>
         </div>
-    </section>
+      </section>
 
-    <section class="content">
-        <!-- Content will be added here -->
-    </section>
+      <section class="intro-combined animate-section" id="intro">
+
+
+        <div class="intro-inner">
+          <div class="intro-left">
+            <p class="intro-label">
+              <span class="intro-hi">HI</span> <span class="intro-hi">I'M</span>
+            </p>
+            <h1 class="intro-name">
+              <span class="intro-name-word">QUINN</span> <span class="intro-name-word">AHO</span>
+            </h1>
+        
+            <div class="intro-tagline">
+              <span class="word tag-graphics">GRAPHICS</span> |
+              <span class="word tag-xr">EXTENDED REALITY</span> |
+              <span class="word tag-engine">GAME ENGINE</span> |
+              <span class="word tag-techart">TECHNICAL ART</span>
+              <span class="word"><em>Enthusiast</em></span>
+            </div>
+        </div>
+        </div>
+      
+        <div class="three-column-layout">
+          <!-- Column 1 -->
+          <div class="column animate-section">
+            <h1 class="section-header">EXPERIENCE</h1>
+            <div class="section-content">
+              <p class="section-line">
+                <span class="word">Immersive</span>
+                <span class="word">/</span>
+                <span class="word">Software</span>
+                <span class="word">Dev.</span>
+              </p>
+            </div>
+          </div>
+      
+          <!-- Column 2 -->
+          <div class="column animate-section">
+            <h1 class="section-header">PROJECTS</h1>
+            <div class="section-content">
+              <p class="section-line">
+                <span class="word">The</span>
+                <span class="word">Golem’s</span>
+                <span class="word">Curse</span>
+              </p>
+            </div>
+          </div>
+      
+          <!-- Column 3 -->
+          <div class="column animate-section">
+            <h1 class="section-header">EDUCATION</h1>
+            <div class="section-content">
+              <p class="section-line">
+                <span class="word">Bachelor’s</span>
+                <span class="word">in</span>
+                <span class="word">CS</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+
 
     <div class="promo">
         <div class="promo-middle">
@@ -77,5 +144,83 @@
     </div>
 
     <script src="./script.js"></script>
+
+    <script>
+// Sequential observer-based animation for cinematic scroll reveal
+
+window.addEventListener('DOMContentLoaded', () => {
+  const intro = document.getElementById('intro');
+  const sections = Array.from(document.querySelectorAll('.animate-section'));
+  const animatedSet = new Set();
+
+  // Helper to animate words with stagger
+  const animateWords = (container, selector, baseDelay = 0, step = 0.2) => {
+    const words = container.querySelectorAll(selector);
+    words.forEach((el, i) => {
+      el.style.animationDelay = `${baseDelay + i * step}s`;
+    });
+    return baseDelay + words.length * step;
+  };
+
+  // Promise that resolves after this section's animation delay
+  const animateSection = (section) => {
+    return new Promise((resolve) => {
+      if (animatedSet.has(section)) return resolve();
+      animatedSet.add(section);
+
+      section.classList.add('animate');
+
+      let delay = 0;
+      if (section.id === 'intro') {
+        delay = animateWords(section, '.intro-hi', 0.2, 0.2);
+        delay = animateWords(section, '.intro-name-word', delay + 0.3, 0.2);
+        delay = animateWords(section, '.intro-tagline .word', delay + 0.4, 0.35);
+      } else {
+        delay = animateWords(section, '.word', 0, 0.35);
+      }
+
+      // Wait for the animation to finish before resolving
+      const totalDuration = (delay + 0.5) * 1000; // 0.5s buffer
+      setTimeout(resolve, totalDuration);
+    });
+  };
+
+  // Queue to hold sections in order
+  const animationQueue = [];
+  let animating = false;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !animatedSet.has(entry.target)) {
+        animationQueue.push(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+    processQueue();
+  }, {
+    threshold: 0.6,
+    rootMargin: '0px 0px -20% 0px'
+  });
+
+  const processQueue = () => {
+    if (animating || animationQueue.length === 0) return;
+    animating = true;
+    const section = animationQueue.shift();
+    animateSection(section).then(() => {
+      animating = false;
+      processQueue();
+    });
+  };
+
+  // Observe all target sections
+  if (intro) observer.observe(intro);
+  sections.forEach(section => observer.observe(section));
+});
+
+    </script>
+    
+    
+    
+       
 </body>
 </html>

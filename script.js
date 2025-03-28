@@ -118,14 +118,14 @@ textCtx.textAlign = 'center';
 textCtx.textBaseline = 'middle';
 
 // "Welcome to my portfolio" – white
-textCtx.font = 'bold 100px Arial';
+textCtx.font = 'bold 140px Arial';
 textCtx.fillStyle = 'black';
-textCtx.fillText('WELCOME TO MY PORTFOLIO', textCanvas.width / 2, textCanvas.height / 2 - 100);
+textCtx.fillText("HI I'M", textCanvas.width / 2, textCanvas.height / 2 - 80);
 
 // "QUINN AHO" – black, centered below the others
 textCtx.font = 'bold 140px Arial';
 textCtx.fillStyle = 'black';
-textCtx.fillText('QUINN AHO', textCanvas.width / 2, textCanvas.height / 2 + 150);
+textCtx.fillText('QUINN.', textCanvas.width / 2, textCanvas.height / 2 + 150);
 
 // Create a texture from the offscreen canvas
 const textMaskTexture = gl.createTexture();
@@ -1775,3 +1775,4 @@ document.querySelector('.scroll-arrow').addEventListener('click', () => {
         behavior: 'smooth'
     });
 });
+

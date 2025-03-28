@@ -1,4 +1,7 @@
-@font-face {
+/* =========================
+   Base Setup & General Styles
+   ========================= */
+   @font-face {
     font-family: 'iconfont';
     src: url('iconfont.ttf') format('truetype');
 }
@@ -15,10 +18,9 @@ html, body {
 }
 
 body {
-    margin: 0;
-    width: 100%;
-    min-height: 100vh;
-    font-family: 'Arial', sans-serif;
+  font-family: 'Inter', sans-serif;
+  background-color: #000;
+  color: white;
 }
 
 /* Header Styles */
@@ -90,172 +92,7 @@ body {
     left: 0;
 }
 
-/* Content Section */
-.content {
-    position: relative;
-    background-color: #0a0a0a;
-    min-height: 100vh;
-    padding: 4rem 2rem;
-    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
-    border-top: 1px solid rgba(255, 255, 255, 0.03);
-}
-
-/* GUI Styles */
-.dg {
-    opacity: 0.9;
-    z-index: 1001;
-}
-
-.dg .property-name {
-    overflow: visible;
-}
-
-/* Font Styling */
-.bigFont {
-    font-size: 150%;
-    color: #8C8C8C;
-}
-.cr.function.appBigFont {
-    font-size: 150%;
-    line-height: 27px;
-    color: #A5F8D3;
-    background-color: #023C40;
-}
-.cr.function.appBigFont .property-name {
-    float: none;
-}
-.cr.function.appBigFont .icon {
-    position: sticky;
-    bottom: 27px;
-}
-
-/* Icons */
-.icon {
-    font-family: 'iconfont';
-    font-size: 130%;
-    float: right;
-}
-.twitter:before {
-    content: 'a';
-}
-.github:before {
-    content: 'b';
-}
-.app:before {
-    content: 'c';
-}
-.discord:before {
-    content: 'd';
-}
-
-/* Promo Modal */
-.promo {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    overflow: auto;
-    color: lightblue;
-    background-color: rgba(0,0,0,0.4);
-    animation: promo-appear-animation 0.35s ease-out;
-}
-.promo-middle {
-    display: table-cell;
-    vertical-align: middle;
-}
-.promo-content {
-    width: 80vw;
-    height: 80vh;
-    max-width: 80vh;
-    max-height: 80vw;
-    margin: auto;
-    padding: 0;
-    font-size: 2.8vmax;
-    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
-    text-align: center;
-    background-image: url("promo_back.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-}
-.promo-header {
-    height: 10%;
-    padding: 2px 16px;
-}
-.promo-close {
-    width: 10%;
-    height: 100%;
-    text-align: left;
-    float: left;
-    font-size: 1.3em;
-}
-.promo-close:hover {
-    cursor: pointer;
-}
-.promo-body {
-    padding: 8px 16px 16px 16px;
-    margin: auto;
-}
-.promo-body p {
-    margin-top: 0;
-    mix-blend-mode: color-dodge;
-}
-.link {
-    width: 100%;
-    display: inline-block;
-}
-.link img {
-    width: 100%;
-}
-
-@keyframes promo-appear-animation {
-    0% {
-        transform: scale(2.0);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1.0);
-        opacity: 1;
-    }
-}
-
-/* Hero Text & Animations */
-.hero-container {
-    position: absolute;
-    top: 20px;
-    width: 100%;
-    text-align: center;
-    z-index: 10;
-}
-.hero-text {
-    color: white;
-    font-size: 2.5em;
-    font-family: Arial, sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    opacity: 0;
-    animation: fadeIn 2s forwards;
-}
-.hero-subtext {
-    color: white;
-    font-size: 1.5em;
-    font-family: Arial, sans-serif;
-    margin-top: 20px;
-    opacity: 0;
-    animation: fadeIn 2s forwards;
-    animation-delay: 2.5s;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
+/* Scroll Arrow (Preserved as is) */
 .scroll-arrow {
   position: absolute;
   bottom: 40px;
@@ -292,5 +129,434 @@ body {
   }
   60% {
     transform: translate(-50%, -5px);
+  }
+}
+
+/* Content Section */
+.content {
+    position: relative;
+    background-color: #0a0a0a;
+    min-height: 100vh;
+    padding: 4rem 2rem;
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* =========================
+   Animated Sections (EXPERIENCE, PROJECTS, EDUCATION)
+   ========================= */
+
+/* Base styling for each animated section */
+.animate-section {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    margin-bottom: 4rem;
+    background-color: #0a0a0a;
+    padding: 2rem;
+}
+
+/* Header container (left-aligned) */
+.section-header-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Section Headers */
+.section-header {
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+    font-size: 3rem;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin: 0 0 1rem 0;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    position: relative;
+}
+
+/* Underline added as a pseudo-element */
+.section-header::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 3px;
+    background: #fff;
+    margin-top: 0.5em;
+}
+
+/* Section Content Styling */
+.section-content {
+    padding-left: 2rem;
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+/* Each line of content */
+.section-line {
+    margin-bottom: 1.2rem;
+    overflow: hidden;
+}
+
+/* Animate each word from left to right */
+.word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateX(-50px);
+}
+
+/* =========================
+   Animation Triggers (When "animate" class is added)
+   ========================= */
+
+/* Reveal the section itself */
+.animate-section.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animate the section header with a fade-in */
+.animate-section.animate .section-header {
+    animation: fadeIn 1s forwards;
+    animation-delay: 0.2s;
+}
+
+/* Animate the header underline */
+.animate-section.animate .section-header::after {
+    animation: underlineExpand 1s forwards;
+    animation-delay: 0.8s;
+}
+
+/* Animate each word with a slide-in from left */
+.animate-section.animate .word {
+    animation: slideIn 0.5s forwards;
+}
+
+/* Keyframes for fading in the header */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Keyframes for expanding the underline */
+@keyframes underlineExpand {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* Keyframes for sliding words in from the left */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+/* Container for 3 vertical columns */
+.section-columns {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    margin-bottom: 2rem;
+  }
+  
+  /* Base style for vertical lines */
+  .v-line {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 0;
+    background: white;
+    opacity: 0.2;
+  }
+  
+  /* Left, center, and right column positions */
+  .v-line-left {
+    left: 20%;
+  }
+  .v-line-center {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .v-line-right {
+    left: 80%;
+  }
+  
+  /* Horizontal connector at bottom */
+  .h-connector {
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    height: 2px;
+    width: 0;
+    background: white;
+    opacity: 0.2;
+  }
+  
+  /* Animate vertical lines downward */
+  .animate-section.animate .v-line {
+    animation: verticalGrow 1.5s forwards ease-in-out;
+  }
+  .animate-section.animate .v-line-left {
+    animation-delay: 0.2s;
+  }
+  .animate-section.animate .v-line-center {
+    animation-delay: 0.5s;
+  }
+  .animate-section.animate .v-line-right {
+    animation-delay: 0.8s;
+  }
+  
+  /* Animate horizontal connector after verticals finish */
+  .animate-section.animate .h-connector {
+    animation: horizontalGrow 1s forwards ease-in-out;
+    animation-delay: 1.2s;
+  }
+  
+  /* Vertical line animation (top to bottom) */
+  @keyframes verticalGrow {
+    from {
+      height: 0;
+      opacity: 0.2;
+    }
+    to {
+      height: 100%;
+      opacity: 0.5;
+    }
+  }
+  
+  /* Horizontal line animation (left to right) */
+  @keyframes horizontalGrow {
+    from {
+      width: 0;
+      opacity: 0.2;
+    }
+    to {
+      width: 60%;
+      opacity: 0.5;
+    }
+  }
+/* Layout: three columns side-by-side */
+/* Section with subtle gradient, rounded corners, and depth */
+/* Full unified section */
+.intro-combined {
+  width: 100%;
+  background-color: #000; /* solid black */
+  color: white;
+  padding: 6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Intro content block */
+.intro-inner {
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 5rem;
+}
+
+/* Top left-aligned name */
+.intro-left {
+  text-align: left;
+}
+
+.intro-label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #999;
+  margin-bottom: 0.5rem;
+}
+
+.intro-name {
+  font-size: 3.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  line-height: 1;
+  color: white;
+  margin-bottom: 2rem; /* <-- Add this */
+}
+
+
+/* Tagline or cursive text */
+.intro-tagline {
+  text-align: center;
+  font-size: 1.4rem;
+  color: #eee;
+  opacity: 0.9;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+}
+
+.tag-graphics {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
+}
+
+.tag-xr {
+  font-family: 'DM Serif Display', serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.tag-engine {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+}
+
+.tag-techart {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 500;
+}
+
+.intro-tagline em {
+  font-family: 'Tangerine', cursive;
+  font-style: normal;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-left: 0.5rem;
+  font-size: 3.0rem;
+}
+
+
+/* Columns section */
+.three-column-layout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Individual column (no cards) */
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Section headers */
+.section-header,
+.intro-name {
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+/* Text content under each column */
+.section-content {
+  text-align: center;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+/* Text animation (optional) */
+.word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+}
+.animate-section.animate .word {
+  animation: wordUp 0.5s forwards;
+}
+@keyframes wordUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ensure column section is black */
+.three-column-layout {
+  background-color: #000;
+}
+
+/* Ensure each column is black */
+.column {
+  background-color: #000;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: wordUp 0.6s forwards;
+}
+
+/* Optional: smoother easing */
+@keyframes wordUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modern slide-in for "HI I'M" */
+.intro-hi {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: hiSlideIn 0.7s forwards ease-out;
+}
+
+.intro-hi:nth-child(1) { animation-delay: 0.2s; }
+.intro-hi:nth-child(2) { animation-delay: 0.4s; }
+
+@keyframes hiSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Clean fade-up for "QUINN AHO" */
+.intro-name-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: nameFadeUp 0.8s forwards ease-out;
+}
+
+.intro-name-word:nth-child(1) { animation-delay: 0.7s; }
+.intro-name-word:nth-child(2) { animation-delay: 0.9s; }
+
+@keyframes nameFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
