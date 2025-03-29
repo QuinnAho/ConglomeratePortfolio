@@ -36,16 +36,23 @@
     <script async src="https://www.google-analytics.com/analytics.js"></script>
 </head>
 <body>
-    <header class="main-header">
-        <nav>
-            <ul>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#skills">Skills</a></li>
-            </ul>
-        </nav>
-    </header>
+  <header class="main-header">
+    <!-- Left-side navigation -->
+    <nav class="left-nav">
+      <ul class="nav-links">
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
+      </ul>
+    </nav>
+  
+    <!-- Dynamic guide text (left-aligned) -->
+    <div class="header-guide" id="header-guide"></div>
+  
+    <!-- Optional right side -->
+    <div class="right-nav"></div>
+  </header>
 
     <section class="hero">
         <canvas></canvas>
@@ -210,3 +217,92 @@
        
 </body>
 </html>
+
+<script>
+class DynamicGuide {
+  constructor(container, hero) {
+    this.container = container;
+    this.hero = hero;
+    this.hasStarted = false;
+    this.messageIndex = 0;
+    this.messages = [
+      "Having fun, aren't we?",
+      "Keep at it!",
+      "You're a fluid sim master!"
+    ];
+    this.idleDelay = 2500;
+    this.messageTimer = null;
+    this.isHeroVisible = false;
+    this.init();
+  }
+
+  init() {
+    const onFirstClick = () => {
+      if (!this.hasStarted && this.isHeroVisible) {
+        this.hasStarted = true;
+        this.showNextMessage();
+
+        const hint = document.getElementById("click-drag-hint");
+        if (hint) {
+          hint.classList.add("fade-out-hint");
+          setTimeout(() => {
+            hint.style.display = "none";
+          }, 800);
+        }
+      }
+    };
+
+    document.addEventListener("click", onFirstClick, { once: true });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        this.isHeroVisible = entry.isIntersecting;
+        if (!this.isHeroVisible) this.clearMessages();
+      });
+    }, { threshold: 0.4 });
+
+    observer.observe(this.hero);
+  }
+
+  showNextMessage() {
+    if (!this.isHeroVisible || this.messageIndex >= this.messages.length) return;
+
+    const message = this.messages[this.messageIndex++];
+    this.displayMessage(message);
+
+    this.messageTimer = setTimeout(() => {
+      this.showNextMessage();
+    }, this.idleDelay + 800);
+  }
+
+  displayMessage(text) {
+    this.container.innerHTML = "";
+
+    const span = document.createElement("span");
+    span.className = "animated-message";
+    span.textContent = text;
+    this.container.appendChild(span);
+
+    setTimeout(() => {
+      span.classList.add("show");
+    }, 10);
+
+    setTimeout(() => {
+      span.classList.remove("show");
+      span.classList.add("fade-out-all");
+    }, this.idleDelay);
+  }
+
+  clearMessages() {
+    clearTimeout(this.messageTimer);
+    this.container.innerHTML = "";
+    this.messageIndex = 0;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const guideContainer = document.getElementById("header-guide");
+  const hero = document.querySelector(".hero");
+  new DynamicGuide(guideContainer, hero);
+});
+</script>

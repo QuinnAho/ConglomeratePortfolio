@@ -25,19 +25,49 @@ body {
 
 /* Header Styles */
 .main-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    z-index: 1000;
-    padding: 1.2rem 0;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 2rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+.header-guide {
+  flex: 2;
+  text-align: center; /* ⬅️ Changed from center to left */
+  font-size: 1.2rem;
+  font-family: 'Inter', sans-serif;
+  color: white;
+  min-height: 2em;
+  display: flex;
+  align-items: center;
+  padding-left: 2rem; /* ⬅️ Added spacing from left */
+}
+
+.animated-message {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.animated-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animated-message.fade-out-all {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
 .main-header nav ul {
     display: flex;
     justify-content: center;
