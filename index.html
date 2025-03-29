@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="logo.png">
     <link rel="icon" href="logo.png">
 
-    <title>WebGL Fluid Simulation</title>
+    <title>Quinn Aho</title>
     <meta name="description" content="A WebGL fluid simulation that works in mobile browsers.">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Webgl Fluid Simulation">
@@ -58,9 +58,7 @@
         </div>
       </section>
 
-      <section class="intro-combined animate-section" id="intro">
-
-
+      <section class="intro-combined" id="intro">
         <div class="intro-inner">
           <div class="intro-left">
             <p class="intro-label">
@@ -77,12 +75,22 @@
               <span class="word tag-techart">TECHNICAL ART</span>
               <span class="word"><em>Enthusiast</em></span>
             </div>
+          </div>
+        </div>
+        
+        <!-- Learn More Button -->
+        <div class="learn-more-container">
+          <div class="button-column">
+            <a id="download-resume-btn" href="QuinnAhoResume.pdf" download="QuinnAhoResume.pdf">Download Resume</a>
+            <button id="learn-more-btn">Learn More</button>
+          </div>
         </div>
         </div>
-      
+    
+        <!-- Three Column Layout -->
         <div class="three-column-layout">
           <!-- Column 1 -->
-          <div class="column animate-section">
+          <div class="column manual-animate">
             <h1 class="section-header">EXPERIENCE</h1>
             <div class="section-content">
               <p class="section-line">
@@ -93,9 +101,9 @@
               </p>
             </div>
           </div>
-      
+        
           <!-- Column 2 -->
-          <div class="column animate-section">
+          <div class="column manual-animate">
             <h1 class="section-header">PROJECTS</h1>
             <div class="section-content">
               <p class="section-line">
@@ -105,9 +113,9 @@
               </p>
             </div>
           </div>
-      
+        
           <!-- Column 3 -->
-          <div class="column animate-section">
+          <div class="column manual-animate">
             <h1 class="section-header">EDUCATION</h1>
             <div class="section-content">
               <p class="section-line">
@@ -119,6 +127,7 @@
           </div>
         </div>
       </section>
+      
       
 
 
@@ -143,78 +152,58 @@
     <script src="./script.js"></script>
 
     <script>
-// Sequential observer-based animation for cinematic scroll reveal
+      window.addEventListener('DOMContentLoaded', () => {
+        const intro = document.getElementById('intro');
+        const animatedSet = new Set();
+      
+        // Helper to animate words with staggered delays
+        const animateWords = (container, selector, baseDelay = 0, step = 0.2) => {
+          const words = container.querySelectorAll(selector);
+          words.forEach((el, i) => {
+            el.style.animationDelay = `${baseDelay + i * step}s`;
+          });
+          return baseDelay + words.length * step;
+        };
+      
+        // Animate a section and return a promise that resolves when complete
+        const animateSection = (section) => {
+          return new Promise((resolve) => {
+            if (animatedSet.has(section)) return resolve();
+            animatedSet.add(section);
+      
+            // For non-intro sections, add the animate-section class so that header animations fire.
+            if (section.id !== 'intro') {
+              section.classList.add('animate-section');
+            }
+            section.classList.add('animate');
+      
+            let delay = 0;
+            if (section.id === 'intro') {
+              delay = animateWords(section, '.intro-hi', 0.2, 0.2);
+              delay = animateWords(section, '.intro-name-word', delay + 0.3, 0.2);
+              delay = animateWords(section, '.intro-tagline .word', delay + 0.4, 0.35);
+            } else {
+              delay = animateWords(section, '.word', 0, 0.35);
+            }
+            // Wait for the animation to finish before resolving (with a 0.5s buffer)
+            const totalDuration = (delay + 0.5) * 1000;
+            setTimeout(resolve, totalDuration);
+          });
+        };
+      
+        // Trigger column animations only when the Learn More button is pressed.
+        document.getElementById('learn-more-btn').addEventListener('click', () => {
+          const columns = Array.from(document.querySelectorAll('.manual-animate'));
+          let sequence = Promise.resolve();
+          columns.forEach(column => {
+            sequence = sequence.then(() => animateSection(column));
+          });
+          // Optionally, disable the button to prevent repeated clicks (without hiding it):
+          document.getElementById('learn-more-btn').disabled = true;
+        });
+      });
+      </script>
 
-window.addEventListener('DOMContentLoaded', () => {
-  const intro = document.getElementById('intro');
-  const sections = Array.from(document.querySelectorAll('.animate-section'));
-  const animatedSet = new Set();
-
-  // Helper to animate words with stagger
-  const animateWords = (container, selector, baseDelay = 0, step = 0.2) => {
-    const words = container.querySelectorAll(selector);
-    words.forEach((el, i) => {
-      el.style.animationDelay = `${baseDelay + i * step}s`;
-    });
-    return baseDelay + words.length * step;
-  };
-
-  // Promise that resolves after this section's animation delay
-  const animateSection = (section) => {
-    return new Promise((resolve) => {
-      if (animatedSet.has(section)) return resolve();
-      animatedSet.add(section);
-
-      section.classList.add('animate');
-
-      let delay = 0;
-      if (section.id === 'intro') {
-        delay = animateWords(section, '.intro-hi', 0.2, 0.2);
-        delay = animateWords(section, '.intro-name-word', delay + 0.3, 0.2);
-        delay = animateWords(section, '.intro-tagline .word', delay + 0.4, 0.35);
-      } else {
-        delay = animateWords(section, '.word', 0, 0.35);
-      }
-
-      // Wait for the animation to finish before resolving
-      const totalDuration = (delay + 0.5) * 1000; // 0.5s buffer
-      setTimeout(resolve, totalDuration);
-    });
-  };
-
-  // Queue to hold sections in order
-  const animationQueue = [];
-  let animating = false;
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && !animatedSet.has(entry.target)) {
-        animationQueue.push(entry.target);
-        observer.unobserve(entry.target);
-      }
-    });
-    processQueue();
-  }, {
-    threshold: 0.6,
-    rootMargin: '0px 0px -20% 0px'
-  });
-
-  const processQueue = () => {
-    if (animating || animationQueue.length === 0) return;
-    animating = true;
-    const section = animationQueue.shift();
-    animateSection(section).then(() => {
-      animating = false;
-      processQueue();
-    });
-  };
-
-  // Observe all target sections
-  if (intro) observer.observe(intro);
-  sections.forEach(section => observer.observe(section));
-});
-
-    </script>
     
     
     

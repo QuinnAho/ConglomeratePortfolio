@@ -237,6 +237,16 @@ body {
     animation: slideIn 0.5s forwards;
 }
 
+/* Modify the header animation rules to work on any .animate container */
+.animate .section-header {
+  animation: fadeIn 1s forwards;
+  animation-delay: 0.2s;
+}
+.animate .section-header::after {
+  animation: underlineExpand 1s forwards;
+  animation-delay: 0.8s;
+}
+
 /* Keyframes for fading in the header */
 @keyframes fadeIn {
     from { opacity: 0; }
@@ -559,4 +569,107 @@ html {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Modern Bold Style for the Learn More Button */
+#learn-more-btn {
+  background: transparent;
+  color: #fff;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 50px; /* rounded/oval shape */
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.3s ease;
+  outline: none;
+}
+
+/* Pseudo-element to draw an oval outline on hover */
+#learn-more-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #fff;
+  border-radius: 50px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#learn-more-btn:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#learn-more-btn:active {
+  transform: translateY(0);
+}
+
+.button-group {
+  display: inline-flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.learn-more-container {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.button-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Reuse Learn More styles for Resume button */
+#download-resume-btn {
+  background: transparent;
+  color: #fff;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 50px;
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+  outline: none;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+#download-resume-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #fff;
+  border-radius: 50px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#download-resume-btn:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#download-resume-btn:active {
+  transform: translateY(0);
 }
