@@ -47,8 +47,8 @@
       </ul>
     </nav>
   
-    <!-- Dynamic guide text (left-aligned) -->
-    <div class="header-guide" id="header-guide"></div>
+     <!-- Centered guide container -->
+  <div class="header-guide" id="header-guide"></div>
   
     <!-- Optional right side -->
     <div class="right-nav"></div>
@@ -64,6 +64,14 @@
           </a>
         </div>
       </section>
+
+<!-- START: Border wrapper -->
+<div class="border-wrapper">
+  <!-- These four divs are the animated border lines -->
+  <div class="border-top"></div>
+  <div class="border-right"></div>
+  <!--<div class="border-bottom"></div> -->
+  <div class="border-left"></div>
 
       <section class="intro-combined" id="intro">
         <div class="intro-inner">
@@ -219,90 +227,158 @@
 </html>
 
 <script>
-class DynamicGuide {
-  constructor(container, hero) {
-    this.container = container;
-    this.hero = hero;
-    this.hasStarted = false;
-    this.messageIndex = 0;
-    this.messages = [
-      "Having fun, aren't we?",
-      "Keep at it!",
-      "You're a fluid sim master!"
-    ];
-    this.idleDelay = 2500;
-    this.messageTimer = null;
-    this.isHeroVisible = false;
-    this.init();
-  }
-
-  init() {
-    const onFirstClick = () => {
-      if (!this.hasStarted && this.isHeroVisible) {
-        this.hasStarted = true;
-        this.showNextMessage();
-
-        const hint = document.getElementById("click-drag-hint");
-        if (hint) {
-          hint.classList.add("fade-out-hint");
-          setTimeout(() => {
-            hint.style.display = "none";
-          }, 800);
-        }
-      }
-    };
-
-    document.addEventListener("click", onFirstClick, { once: true });
-
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        this.isHeroVisible = entry.isIntersecting;
-        if (!this.isHeroVisible) this.clearMessages();
+  class DynamicGuide {
+    constructor(options) {
+      // options.container must be the #header-guide element
+      // options.header is the .main-header or the element you want to observe
+      this.container   = options.container;
+      this.header      = options.header;
+  
+      // The messages to cycle
+      this.messages    = options.messages || [
+        "Having fun, aren't we?",
+        "Keep at it!",
+        "You're a fluid sim master!"
+      ];
+      this.currentIndex  = 0;
+  
+      // Timings
+      this.showDuration  = options.showDuration  || 2000; // ms that message is fully visible
+      this.transitionGap = options.transitionGap || 500;  // ms fade out/in
+      this.loopEnabled   = false; // starts off until header is in view
+  
+      // We store references to timeouts so we can clear them if needed
+      this.timeoutId     = null;
+  
+      // Optional: track if user is hovered
+      this.isHovered     = false;
+  
+      // Kick off everything
+      this.init();
+    }
+  
+    init() {
+      // 1) Set up an IntersectionObserver on the header
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !this.loopEnabled) {
+            // If the header is in view, start or resume message loop
+            this.loopEnabled = true;
+            this.cycleMessages();
+          } else if (!entry.isIntersecting) {
+            // If the header is NOT in view, stop and reset everything
+            this.loopEnabled = false;
+            this.resetMessages();
+          }
+        });
+      }, { threshold: 0.5 });
+  
+      observer.observe(this.header);
+  
+      // 2) Optional hover listeners to do something on mouseenter / mouseleave
+      this.header.addEventListener("mouseenter", () => {
+        this.isHovered = true;
+        // If you want to pause on hover:
+        // this.loopEnabled = false;
+        // this.resetMessages();
       });
-    }, { threshold: 0.4 });
-
-    observer.observe(this.hero);
-  }
-
-  showNextMessage() {
-    if (!this.isHeroVisible || this.messageIndex >= this.messages.length) return;
-
-    const message = this.messages[this.messageIndex++];
-    this.displayMessage(message);
-
-    this.messageTimer = setTimeout(() => {
-      this.showNextMessage();
-    }, this.idleDelay + 800);
-  }
-
-  displayMessage(text) {
-    this.container.innerHTML = "";
-
-    const span = document.createElement("span");
-    span.className = "animated-message";
-    span.textContent = text;
-    this.container.appendChild(span);
-
-    setTimeout(() => {
-      span.classList.add("show");
-    }, 10);
-
-    setTimeout(() => {
+      this.header.addEventListener("mouseleave", () => {
+        this.isHovered = false;
+        // If you paused on hover, you can resume here:
+        // this.loopEnabled = true;
+        // this.cycleMessages();
+      });
+    }
+  
+    // The main function to cycle messages in a loop
+    cycleMessages() {
+      if (!this.loopEnabled) return; // safety check
+      // If we exceed the last message, wrap back to 0 for infinite loop
+      if (this.currentIndex >= this.messages.length) {
+        this.currentIndex = 0;
+      }
+  
+      // Grab the next message
+      const message = this.messages[this.currentIndex];
+      this.currentIndex++;
+  
+      // 1) Display this message
+      this.displayMessage(message);
+  
+      // 2) Wait the "showDuration", then fade out
+      this.timeoutId = setTimeout(() => {
+        this.fadeOutCurrentMessage(() => {
+          // After fade out completes, call cycleMessages again
+          if (this.loopEnabled) {
+            this.cycleMessages();
+          }
+        });
+      }, this.showDuration);
+    }
+  
+    displayMessage(text) {
+      // Clear container
+      this.container.innerHTML = "";
+  
+      // Create the message span
+      const span = document.createElement("span");
+      span.className = "animated-message";
+      span.textContent = text;
+      this.container.appendChild(span);
+  
+      // Fade in (short delay to ensure transition is applied)
+      requestAnimationFrame(() => {
+        span.classList.add("show"); 
+      });
+    }
+  
+    fadeOutCurrentMessage(callback) {
+      const span = this.container.querySelector(".animated-message");
+      if (!span) {
+        // no message to fade out, just callback
+        if (callback) callback();
+        return;
+      }
+      // Start fade out
       span.classList.remove("show");
       span.classList.add("fade-out-all");
-    }, this.idleDelay);
+  
+      // After the transitionGap, remove it from DOM and callback
+      this.timeoutId = setTimeout(() => {
+        // Clear container
+        this.container.innerHTML = "";
+        if (callback) callback();
+      }, this.transitionGap);
+    }
+  
+    resetMessages() {
+      // Clear any timeouts
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
+      // Clear container text
+      this.container.innerHTML = "";
+      // Reset index
+      this.currentIndex = 0;
+    }
   }
-
-  clearMessages() {
-    clearTimeout(this.messageTimer);
-    this.container.innerHTML = "";
-    this.messageIndex = 0;
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const guideContainer = document.getElementById("header-guide");
-  const hero = document.querySelector(".hero");
-  new DynamicGuide(guideContainer, hero);
-});
-</script>
+  
+  // When DOM is loaded, init the new DynamicGuide
+  document.addEventListener("DOMContentLoaded", () => {
+    const guideContainer = document.getElementById("header-guide");
+    const mainHeader = document.querySelector(".main-header");
+  
+    // Instantiate the dynamic guide
+    new DynamicGuide({
+      container: guideContainer,
+      header: mainHeader,
+      messages: [
+        "Welcome to my site!",
+        "Check out my projects below!",
+        "I hope you enjoy exploring!",
+        "Feel free to reach out anytime."
+      ],
+      showDuration: 4000,     // each message is visible for 4 seconds now
+      transitionGap: 3000     // 0.6s fade
+    });
+  });
+  </script>

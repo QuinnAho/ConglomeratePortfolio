@@ -25,6 +25,7 @@ body {
 
 /* Header Styles */
 .main-header {
+  position: relative; /* Ensure the guide can absolutely-position inside */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -33,7 +34,6 @@ body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   z-index: 1000;
-  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -41,32 +41,28 @@ body {
 }
 
 .header-guide {
-  flex: 2;
-  text-align: center; /* ⬅️ Changed from center to left */
-  font-size: 1.2rem;
-  font-family: 'Inter', sans-serif;
-  color: white;
-  min-height: 2em;
-  display: flex;
-  align-items: center;
-  padding-left: 2rem; /* ⬅️ Added spacing from left */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /* center horizontally & vertically */
+  text-align: center;
+  width: auto;
+  padding: 0.5rem;
+  /* optional styling */
 }
 
+/* Example for the fade-in/fade-out classes */
 .animated-message {
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.5s ease;
 }
 
 .animated-message.show {
   opacity: 1;
-  transform: translateY(0);
 }
 
 .animated-message.fade-out-all {
   opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 .main-header nav ul {
     display: flex;
@@ -703,3 +699,81 @@ html {
 #download-resume-btn:active {
   transform: translateY(0);
 }
+/* 1) The wrapper that holds both your actual content AND the animated borders */
+.border-wrapper {
+  position: relative;  /* required so .border-* can absolutely-position inside */
+  width: 100%;         /* ensures full page width inside normal flow */
+  margin: 0 auto;      /* optional, center if you like */
+  box-sizing: border-box;
+  /* no explicit height needed; it expands based on content */
+}
+
+/* 2) Base styles for all four sides of the border */
+.border-top,
+.border-right,
+.border-bottom,
+.border-left {
+  position: absolute;
+  background-color: #fff;  /* the visible color of the border */
+  z-index: 9999;           /* ensure the border sits on top of content */
+}
+
+/* 3) Top border: starts at zero width, animates to full width */
+.border-top {
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;                /* border thickness */
+  animation: drawTop 1s forwards ease-out; 
+}
+
+@keyframes drawTop {
+  0%   { width: 0%; }
+  100% { width: 100%; }
+}
+
+/* 4) Right border: starts at zero height, animates downward */
+.border-right {
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 0%;      
+  animation: drawRight 1s forwards ease-out;
+  animation-delay: 1s;        /* wait until top border finishes */
+}
+
+@keyframes drawRight {
+  0%   { height: 0%; }
+  100% { height: 100%; }
+}
+
+/* 5) Bottom border: also from zero to full width */
+.border-bottom {
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  animation: drawBottom 1s forwards ease-out;
+  animation-delay: 2s;        /* waits for right border to finish */
+}
+
+@keyframes drawBottom {
+  0%   { width: 0%; }
+  100% { width: 100%; }
+}
+
+/* 6) Left border: final side, also animates downward */
+.border-left {
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 0%;
+  animation: drawLeft 1s forwards ease-out;
+  animation-delay: 3s;        /* starts after bottom border is done */
+}
+
+@keyframes drawLeft {
+  0%   { height: 0%; }
+  100% { height: 100%; }
+}
+
