@@ -1,4 +1,4 @@
-# WebGL Fluid Simulation
+# Quinn Aho Portfolio Website
 
 [Play here](https://paveldogreat.github.io/WebGL-Fluid-Simulation/)
 
